@@ -1,12 +1,14 @@
+import { EUserRole } from "./enum"
+
 export interface IUser {
 	id: string
 	telNumber: string
 	firstName: string
 	lastName: string
 	password: string
-	role: "USER" | "ADMIN" | "SUER_ADMIN"
+	role: EUserRole
 	createdAt: Date
-	answers?: Answer[]
+	historyAnswers?: IHistoryAnswer[]
 }
 
 export interface IQuestion {
@@ -16,18 +18,27 @@ export interface IQuestion {
 }
 
 export interface IChoice {
+	id: string
 	title: string
 	score: number
 }
 
-export interface Answer {
+export interface IHistoryAnswer {
 	id: string
-	userId?: string
+	userId: string | null
 	user?: IUser
+	isShare: boolean
+	score: number
+	createdAt: Date
+	criteria: string
+	answers: IAnswer[]
+}
+
+export interface IAnswer {
 	questionId: string
 	question: IQuestion
-	createdAt: string
-	isShare: boolean
+	choiceId: string
+	choice: IChoice
 }
 
 export interface IContext {
@@ -42,10 +53,22 @@ export type IResolver<P = any, A = any> = (
 	info: any
 ) => any
 
+type x = { a: number; b: number }
+
+type e = keyof x
+
 export interface IResolverType<P = any> {
-	[key: string]: IResolverMap<P> | IResolver<P> | IResolverType<P>
+	[key: string | e]: IResolverMap<P> | IResolver<P> | IResolverType<P>
 }
 
 interface IResolverMap<P> {
 	[key: string]: IResolver<P>
+}
+
+export interface ICriteria {
+	range: {
+		start: number
+		end: number
+	}
+	criteria: string
 }

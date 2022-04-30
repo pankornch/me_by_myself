@@ -12,4 +12,23 @@ export default gql`
 		telNumber: String!
 		password: String!
 	}
+
+	input SubmitQuestionInput {
+		answers: [AnswerInput!]!
+	}
+
+	input AnswerInput {
+		questionId: ID!
+		choiceId: ID!
+	}
+
+	input SortInput {
+		type: SortType!
+		orderBy: String!
+	}
+
+	enum SortType {
+		ASC
+		DESC
+	}
 `

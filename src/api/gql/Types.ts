@@ -6,9 +6,10 @@ export default gql`
 		telNumber: String!
 		firstName: String!
 		lastName: String!
+		fullName: String!
 		role: String!
 		createdAt: Date!
-		answers: [Answer]!
+		historyAnswers: [HistoryAnswer]!
 	}
 
 	type Question {
@@ -18,20 +19,27 @@ export default gql`
 	}
 
 	type Choice {
-		title: String
-		score: Float
+		id: ID!
+		title: String!
+		score: Float!
 	}
 
-	type Answer {
+	type HistoryAnswer {
 		id: ID!
 		userId: ID
 		user: User
-		questionId: ID!
-		question: Question!
 		score: Float!
 		criteria: String!
 		createdAt: Date!
 		isShare: Boolean!
+		answers: [Answer!]
+	}
+
+	type Answer {
+		questionId: ID!
+		question: Question!
+		choiceId: ID!
+		choice: Choice!
 	}
 
 	type AuthResponse {

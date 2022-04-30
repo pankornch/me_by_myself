@@ -1,5 +1,11 @@
 export enum ECollection {
 	USER = "Users",
 	QUESTION = "Questions",
-	ANSWER = "Answers",
+	HISTORY_ANSWER = "HistoryAnswers",
+}
+
+export enum EUserRole {
+	USER = "USER",
+	ADMIN = "ADMIN",
+	SUPER_ADMIN = "SUPER_ADMIN",
 }

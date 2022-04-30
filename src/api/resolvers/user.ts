@@ -1,5 +1,5 @@
 import { IResolverType, IUser } from "../../../type"
-import { ECollection } from "../../../type/enum"
+import { ECollection, EUserRole } from "../../../type/enum"
 import { firestore } from "../../configs/firebase"
 import { createToken } from "../../utils/token"
 import auth from "../middleware/auth"
@@ -23,13 +23,21 @@ interface LoginInput {
 	}
 }
 
-export const query: IResolverType = {
+export const Query: IResolverType = {
 	me: auth((_, __, { user }) => {
 		return user
 	}),
+	adminListAdminAccounts: auth(async () => {
+		const res = await firestore
+			.collection(ECollection.USER)
+			.where("role", "==", EUserRole.ADMIN)
+			.orderBy("createdAt", "asc")
+			.get()
+		return res.docs.map((e) => e.data())
+	}, [EUserRole.ADMIN]),
 }
 
-export const mutation: IResolverType = {
+export const Mutation: IResolverType = {
 	createUser: async (_, { input }: CreateUserInput) => {
 		const userRes = await firestore
 			.collection(ECollection.USER)
@@ -47,7 +55,7 @@ export const mutation: IResolverType = {
 			lastName: input.lastName,
 			telNumber: input.telNumber,
 			password: await bcrypt.hash(input.password, 10),
-			role: "USER",
+			role: EUserRole.USER,
 			createdAt: new Date(),
 		}
 
@@ -77,4 +85,20 @@ export const mutation: IResolverType = {
 	},
 }
 
-export const User: IResolverType = {}
+export const User: IResolverType<IUser> = {
+	fullName: (parent) => {
+		return `${parent.firstName} ${parent.lastName}`
+	},
+	createdAt: (parent) => {
+		return (parent.createdAt as any).toDate()
+	},
+	historyAnswers: async (parent) => {
+		const res = await firestore
+			.collection(ECollection.HISTORY_ANSWER)
+			.where("userId", "==", parent.id)
+			.orderBy("score", "desc")
+			.get()
+		const data = res.docs.map((e) => e.data())
+		return data
+	},
+}
