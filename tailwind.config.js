@@ -4,7 +4,18 @@ module.exports = {
     "./src/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        main: {
+          "blue-green": "#20A2A0",
+          "green-light": "#A2E1DB",
+          "red": "#EC4C38",
+          "red-light": "#EB8E8E",
+          "grey": "#E5E5E5"
+        }
+      }
+    },
   },
   plugins: [],
+  mode: "jit"
 }
