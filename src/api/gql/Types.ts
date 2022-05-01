@@ -9,7 +9,7 @@ export default gql`
 		fullName: String!
 		role: String!
 		createdAt: Date!
-		historyAnswers: [HistoryAnswer]!
+		historyAnswers(sortInput: SortInput): [HistoryAnswer]!
 	}
 
 	type Question {

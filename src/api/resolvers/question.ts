@@ -5,35 +5,33 @@ import arrayToMap from "../../utils/arrayToMap"
 import getCriteria from "../../utils/getCriteria"
 import { extractBearerToken, extractTokenUserMetadata } from "../../utils/token"
 import { firestore } from "../../configs/firebase"
-import { ECollection } from "../../../type/enum"
+import { ECollection, EUserRole } from "../../../type/enum"
 import { choices, criterias, questions } from "../data/question"
+import auth from "../middleware/auth"
+import { SortInput, SubmitQuestionInput } from "../../../type/gql"
 
 const choiceMap = arrayToMap(choices, "id")
 const questionMap = arrayToMap(questions, "id")
 
 export const Query: IResolverType = {
 	questions: () => questions,
-	adminGetHistoryAnswers: async () => {
-		const res = await firestore
-			.collection(ECollection.HISTORY_ANSWER)
-			.orderBy("createdAt", "desc")
-			.get()
-		return res.docs.map((e) => e.data())
-	},
+	adminGetHistoryAnswers: auth(
+		async (_, { sortInput }: { sortInput: SortInput }) => {
+			const res = await firestore
+				.collection(ECollection.HISTORY_ANSWER)
+				.orderBy(sortInput.orderBy || "createdAt", sortInput.type || "desc")
+				.get()
+			return res.docs.map((e) => e.data())
+		},
+		[EUserRole.ADMIN, EUserRole.SUPER_ADMIN]
+	),
 }
 
-interface SubmitQuestionInput {
-	input: { answers: AnswerInput[]; isShare: boolean }
-}
-interface AnswerInput {
-	questionId: string
-	choiceId: string
-}
 export const Mutation: IResolverType = {
 	submitQuestion: async (
 		_,
 		{ input }: SubmitQuestionInput,
-		{ user, authorization }
+		{ authorization }
 	) => {
 		let userId: string | null = null
 		if (authorization) {
@@ -73,6 +71,13 @@ export const Mutation: IResolverType = {
 
 		return historyAnswersData
 	},
+	adminDeleteHistoryAnswer: auth(
+		async (_, { id }: { id: string }) => {
+			await firestore.collection(ECollection.HISTORY_ANSWER).doc(id).delete()
+			return "Delete success"
+		},
+		[EUserRole.ADMIN, EUserRole.SUPER_ADMIN]
+	),
 }
 
 export const HistoryAnswer: IResolverType<IHistoryAnswer> = {

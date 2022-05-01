@@ -6,22 +6,7 @@ import auth from "../middleware/auth"
 import { v1 } from "uuid"
 import bcrypt from "bcryptjs"
 import { AuthenticationError, UserInputError } from "apollo-server-core"
-
-interface CreateUserInput {
-	input: {
-		telNumber: string
-		firstName: string
-		lastName: string
-		password: string
-	}
-}
-
-interface LoginInput {
-	input: {
-		telNumber: string
-		password: string
-	}
-}
+import { CreateUserInput, LoginInput } from "../../../type/gql"
 
 export const Query: IResolverType = {
 	me: auth((_, __, { user }) => {
@@ -34,7 +19,7 @@ export const Query: IResolverType = {
 			.orderBy("createdAt", "asc")
 			.get()
 		return res.docs.map((e) => e.data())
-	}, [EUserRole.ADMIN]),
+	}, [EUserRole.SUPER_ADMIN]),
 }
 
 export const Mutation: IResolverType = {
@@ -83,6 +68,47 @@ export const Mutation: IResolverType = {
 
 		return { token, user }
 	},
+
+	adminCreateAdminAccount: auth(
+		async (_, { input }: CreateUserInput) => {
+			const userRes = await firestore
+				.collection(ECollection.USER)
+				.where("telNumber", "==", input.telNumber)
+				.get()
+			if (userRes.docs.length) {
+				return new UserInputError(
+					`this phone number: ${input.telNumber} has already exists`
+				)
+			}
+
+			const userData: IUser = {
+				id: v1(),
+				firstName: input.firstName,
+				lastName: input.lastName,
+				telNumber: input.telNumber,
+				password: await bcrypt.hash(input.password, 10),
+				role: EUserRole.ADMIN,
+				createdAt: new Date(),
+			}
+
+			await firestore
+				.collection(ECollection.USER)
+				.doc(userData.id)
+				.set(userData)
+
+			return userData
+		},
+		[EUserRole.SUPER_ADMIN]
+	),
+
+	adminDeleteAdminAccount: auth(
+		async (_, { userId }: { userId: string }) => {
+			await firestore.collection(ECollection.USER).doc(userId).delete()
+
+			return "Delete success"
+		},
+		[EUserRole.SUPER_ADMIN]
+	),
 }
 
 export const User: IResolverType<IUser> = {
