@@ -1,6 +1,6 @@
-import { AuthenticationError } from "apollo-server-core"
+import { AuthenticationError, UserInputError } from "apollo-server-core"
 import { v1 } from "uuid"
-import { IAnswer, IHistoryAnswer, IResolverType } from "../../../type"
+import { IAnswer, IHistoryResult, IResolverType } from "../../../type"
 import arrayToMap from "../../utils/arrayToMap"
 import getCriteria from "../../utils/getCriteria"
 import { extractBearerToken, extractTokenUserMetadata } from "../../utils/token"
@@ -15,16 +15,39 @@ const questionMap = arrayToMap(questions, "id")
 
 export const Query: IResolverType = {
 	questions: () => questions,
-	adminGetHistoryAnswers: auth(
+	adminGetHistoryResults: auth(
 		async (_, { sortInput }: { sortInput: SortInput }) => {
 			const res = await firestore
-				.collection(ECollection.HISTORY_ANSWER)
+				.collection(ECollection.HISTORY_RESULT)
 				.orderBy(sortInput.orderBy || "createdAt", sortInput.type || "desc")
 				.get()
 			return res.docs.map((e) => e.data())
 		},
 		[EUserRole.ADMIN, EUserRole.SUPER_ADMIN]
 	),
+	getResultById: async (_, { id }: { id: string }, { authorization }) => {
+		// let userId: string | null = null
+		// if (authorization) {
+		// 	try {
+		// 		const token = extractBearerToken(authorization)
+		// 		const user = await extractTokenUserMetadata(token)
+		// 		userId = user.id
+		// 	} catch (error: any) {
+		// 		return new AuthenticationError(error.message)
+		// 	}
+		// }
+
+		const resultRes = await firestore
+			.collection(ECollection.HISTORY_RESULT)
+			.doc(id)
+			.get()
+
+		if (!resultRes.exists) {
+			return new UserInputError("Incorrect result id")
+		}
+
+		return resultRes.data()
+	},
 }
 
 export const Mutation: IResolverType = {
@@ -50,33 +73,33 @@ export const Mutation: IResolverType = {
 
 		const answers = input.answers as any
 
-		const historyAnswersData: IHistoryAnswer = {
+		const historyResult: IHistoryResult = {
 			id: v1(),
 			userId,
 			answers,
 			score,
-			criteria: criteria,
+			criteria: criteria!.criteria,
 			isShare: !!input.isShare,
 			createdAt: new Date(),
 		}
 
 		await firestore
-			.collection(ECollection.HISTORY_ANSWER)
-			.doc(historyAnswersData.id)
-			.set(historyAnswersData)
+			.collection(ECollection.HISTORY_RESULT)
+			.doc(historyResult.id)
+			.set(historyResult)
 
-		return historyAnswersData
+		return historyResult
 	},
-	adminDeleteHistoryAnswer: auth(
+	adminDeleteHistoryResult: auth(
 		async (_, { id }: { id: string }) => {
-			await firestore.collection(ECollection.HISTORY_ANSWER).doc(id).delete()
+			await firestore.collection(ECollection.HISTORY_RESULT).doc(id).delete()
 			return "Delete success"
 		},
 		[EUserRole.ADMIN, EUserRole.SUPER_ADMIN]
 	),
 }
 
-export const HistoryAnswer: IResolverType<IHistoryAnswer> = {
+export const HistoryResult: IResolverType<IHistoryResult> = {
 	answers: (parent) => {
 		return parent.answers
 	},
@@ -92,6 +115,9 @@ export const HistoryAnswer: IResolverType<IHistoryAnswer> = {
 			.get()
 
 		return res.data()
+	},
+	isAnonymous: (parent) => {
+		return !parent.userId
 	},
 }
 

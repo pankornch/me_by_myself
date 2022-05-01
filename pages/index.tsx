@@ -1,8 +1,8 @@
 import type { NextPage } from "next"
 import Image from "../src/components/Image"
-import { MenuIcon, ArrowRightIcon } from "@heroicons/react/solid"
+import { ArrowRightIcon } from "@heroicons/react/solid"
 import Link from "next/link"
-import { useState } from "react"
+import Navbar from "../src/components/Navbar"
 
 const DISC = [
 	{
@@ -48,45 +48,10 @@ const DISC = [
 ]
 
 const Home: NextPage = () => {
-	const [isMenuShow, setIsMenuShow] = useState<boolean>(false)
-	const handleToggleMenu = () => setIsMenuShow((prev) => !prev)
-
 	return (
 		<div className="bg-gradient-to-b from-main-blue-green/75 h-screen px-4 md:px-24 lg:px-48 pt-12">
 			<div className="bg-white p-4 rounded-3xl flex flex-col gap-y-8 shadow-lg lg:w-[40rem] m-auto">
-				<nav className="flex items-center justify-between relative">
-					<h4 className="font-semibold text-main-blue-green">Me by Myself</h4>
-					<MenuIcon
-						className="w-8 h-8 cursor-pointer"
-						onClick={handleToggleMenu}
-					/>
-					{isMenuShow && (
-						<>
-							<div
-								onClick={() => setIsMenuShow(false)}
-								className="w-screen h-screen bg-black opacity-25 fixed top-0 left-0 z-40"
-							/>
-
-							<div className="absolute top-10 left-0 bg-white w-[100%] shadow-2xl rounded-3xl p-4 border-main-grey border-2 z-50">
-								<ul className="flex flex-col items-center text-lg gap-y-3">
-									<li>
-										<Link href="/">
-											<a>หน้าหลัก</a>
-										</Link>
-									</li>
-									<li>
-										<Link href="/">
-											<a>ทำแบบประเมิน</a>
-										</Link>
-									</li>
-									<li>
-										<button>เข้าสู่ระบบ</button>
-									</li>
-								</ul>
-							</div>
-						</>
-					)}
-				</nav>
+				<Navbar responsive={false} />
 
 				<h3 className="text-[1.8rem] font-semibold">
 					Build your self-esteem by yourself.

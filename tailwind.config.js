@@ -11,7 +11,8 @@ module.exports = {
           "green-light": "#A2E1DB",
           "red": "#EC4C38",
           "red-light": "#EB8E8E",
-          "grey": "#E5E5E5"
+          "grey": "#E5E5E5",
+          "orange": "#F86513"
         }
       }
     },

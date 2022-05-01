@@ -45,7 +45,10 @@ export const Mutation: IResolverType = {
 		}
 
 		await firestore.collection(ECollection.USER).doc(userData.id).set(userData)
-		const token = createToken(userData.id)
+		const payload: Partial<IUser> = { ...userData }
+		delete payload.password
+
+		const token = createToken(userData.id, payload)
 
 		return { token, user: userData }
 	},
@@ -64,7 +67,10 @@ export const Mutation: IResolverType = {
 			return new AuthenticationError("Incorrect phone number or password")
 		}
 
-		const token = createToken(user.id)
+		const payload: Partial<IUser> = { ...user }
+		delete payload.password
+
+		const token = createToken(user.id, payload)
 
 		return { token, user }
 	},
@@ -109,6 +115,18 @@ export const Mutation: IResolverType = {
 		},
 		[EUserRole.SUPER_ADMIN]
 	),
+
+	refreshToken: auth((_, __, { user }) => {
+		const payload: Partial<IUser> = { ...user }
+		delete payload.password
+
+		const token = createToken(user!.id, payload)
+
+		return {
+			token,
+			user,
+		}
+	}),
 }
 
 export const User: IResolverType<IUser> = {
@@ -118,9 +136,9 @@ export const User: IResolverType<IUser> = {
 	createdAt: (parent) => {
 		return (parent.createdAt as any).toDate()
 	},
-	historyAnswers: async (parent) => {
+	historyResults: async (parent) => {
 		const res = await firestore
-			.collection(ECollection.HISTORY_ANSWER)
+			.collection(ECollection.HISTORY_RESULT)
 			.where("userId", "==", parent.id)
 			.orderBy("score", "desc")
 			.get()

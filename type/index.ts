@@ -8,7 +8,7 @@ export interface IUser {
 	password: string
 	role: EUserRole
 	createdAt: Date
-	historyAnswers?: IHistoryAnswer[]
+	historyResults?: IHistoryResult[]
 }
 
 export interface IQuestion {
@@ -23,7 +23,7 @@ export interface IChoice {
 	score: number
 }
 
-export interface IHistoryAnswer {
+export interface IHistoryResult {
 	id: string
 	userId: string | null
 	user?: IUser
@@ -71,4 +71,5 @@ export interface ICriteria {
 		end: number
 	}
 	criteria: string
+	title: string
 }

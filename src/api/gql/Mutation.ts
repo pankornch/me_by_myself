@@ -5,10 +5,12 @@ export default gql`
 		createUser(input: CreateUserInput!): AuthResponse!
 		login(input: LoginInput!): AuthResponse!
 
-		submitAnswer(input: SubmitAnswerInput!): HistoryAnswer!
+		submitAnswer(input: SubmitAnswerInput!): HistoryResult!
 
 		adminCreateAdminAccount(input: CreateUserInput!): User!
 		adminDeleteAdminAccount(userId: ID!): String
-		adminDeleteHistoryAnswer(id: ID!): String
+		adminDeleteHistoryResult(id: ID!): String
+
+		refreshToken: AuthResponse!
 	}
 `

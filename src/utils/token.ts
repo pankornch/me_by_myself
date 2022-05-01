@@ -4,8 +4,8 @@ import { ECollection } from "../../type/enum"
 import { JWT_SECRET } from "../configs/env"
 import { firestore } from "../configs/firebase"
 
-export const createToken = (uid: string) => {
-	return jwt.sign({ sub: uid }, JWT_SECRET!)
+export const createToken = (uid: string, payload?: any) => {
+	return jwt.sign({ sub: uid, payload }, JWT_SECRET!)
 }
 
 export const verifyToken = (token: string) => {
