@@ -5,7 +5,7 @@ export default gql`
 		createUser(input: CreateUserInput!): AuthResponse!
 		login(input: LoginInput!): AuthResponse!
 
-		submitQuestion(input: SubmitQuestionInput!): HistoryAnswer!
+		submitAnswer(input: SubmitAnswerInput!): HistoryAnswer!
 
 		adminCreateAdminAccount(input: CreateUserInput!): User!
 		adminDeleteAdminAccount(userId: ID!): String

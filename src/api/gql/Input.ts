@@ -13,7 +13,7 @@ export default gql`
 		password: String!
 	}
 
-	input SubmitQuestionInput {
+	input SubmitAnswerInput {
 		answers: [AnswerInput!]!
 	}
 

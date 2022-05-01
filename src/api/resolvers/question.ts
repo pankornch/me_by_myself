@@ -8,7 +8,7 @@ import { firestore } from "../../configs/firebase"
 import { ECollection, EUserRole } from "../../../type/enum"
 import { choices, criterias, questions } from "../data/question"
 import auth from "../middleware/auth"
-import { SortInput, SubmitQuestionInput } from "../../../type/gql"
+import { SortInput, SubmitAnswerInput } from "../../../type/gql"
 
 const choiceMap = arrayToMap(choices, "id")
 const questionMap = arrayToMap(questions, "id")
@@ -28,11 +28,7 @@ export const Query: IResolverType = {
 }
 
 export const Mutation: IResolverType = {
-	submitQuestion: async (
-		_,
-		{ input }: SubmitQuestionInput,
-		{ authorization }
-	) => {
+	submitAnswer: async (_, { input }: SubmitAnswerInput, { authorization }) => {
 		let userId: string | null = null
 		if (authorization) {
 			try {

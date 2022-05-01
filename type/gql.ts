@@ -14,7 +14,7 @@ export interface CreateUserInput {
 	}
 }
 
-export interface SubmitQuestionInput {
+export interface SubmitAnswerInput {
 	input: { answers: AnswerInput[]; isShare: boolean }
 }
 
