@@ -31,4 +31,12 @@ export default gql`
 		ASC
 		DESC
 	}
+
+	input UpdateUserInput {
+		telNumber: String
+		firstName: String
+		lastName: String
+		password: String
+		newPassword: String
+	}
 `

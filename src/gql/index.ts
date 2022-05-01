@@ -25,6 +25,23 @@ export const QUERY_GET_RESULT_BY_ID = gql`
 	}
 `
 
+export const QUERY_GET_MY_HISTORY_RESULTS = gql`
+	query me($sortInput: SortInput) {
+		me {
+			historyResults(sortInput: $sortInput) {
+				id
+				score
+				createdAt
+				criteria
+				user {
+					fullName
+					telNumber
+				}
+			}
+		}
+	}
+`
+
 export const MUTATION_SUBMIT_ANSWER = gql`
 	mutation submitAnswer($input: SubmitAnswerInput!) {
 		submitAnswer(input: $input) {
@@ -53,6 +70,14 @@ export const MUTATION_REFRESH_TOKEN = gql`
 	mutation {
 		refreshToken {
 			token
+		}
+	}
+`
+
+export const MUTATION_UPDATE_USER = gql`
+	mutation updateUser($input: UpdateUserInput!) {
+		updateUser(input: $input) {
+			id
 		}
 	}
 `

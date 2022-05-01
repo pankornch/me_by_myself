@@ -27,6 +27,7 @@ export const criterias: ICriteria[] = [
 			end: 40,
 		},
 		criteria: "มีความรู้สึกมีคุณค่าในตนเองสูง",
+		criteriaRange: "สูง",
 		title: "ระดับคะแนนของคุณอยู่ในช่วง 31 - 40",
 	},
 	{
@@ -35,6 +36,7 @@ export const criterias: ICriteria[] = [
 			end: 30,
 		},
 		criteria: "มีความรู้สึกมีคุณค่าในตนเองปานกลาง",
+		criteriaRange: "ปานกลาง",
 		title: "ระดับคะแนนของคุณอยู่ในช่วง 21 - 30",
 	},
 	{
@@ -43,6 +45,7 @@ export const criterias: ICriteria[] = [
 			end: 20,
 		},
 		criteria: "มีความรู้สึกมีคุณค่าในตนเองต่ำ",
+		criteriaRange: "ต่ำ",
 		title: "ระดับคะแนนของคุณอยู่ในช่วง 10 - 20",
 	},
 ]

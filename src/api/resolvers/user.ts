@@ -6,7 +6,12 @@ import auth from "../middleware/auth"
 import { v1 } from "uuid"
 import bcrypt from "bcryptjs"
 import { AuthenticationError, UserInputError } from "apollo-server-core"
-import { CreateUserInput, LoginInput } from "../../../type/gql"
+import {
+	CreateUserInput,
+	LoginInput,
+	SortInput,
+	UpdateUserInput,
+} from "../../../type/gql"
 
 export const Query: IResolverType = {
 	me: auth((_, __, { user }) => {
@@ -52,6 +57,32 @@ export const Mutation: IResolverType = {
 
 		return { token, user: userData }
 	},
+
+	updateUser: auth(async (_, { input }: UpdateUserInput, { user }) => {
+		if (
+			input.newPassword &&
+			!(await bcrypt.compare(input.password, user!.password))
+		) {
+			return new UserInputError("Incorrect current password")
+		}
+
+		const updateUserData: IUser = {
+			id: user!.id,
+			telNumber: input.telNumber || user!.telNumber,
+			firstName: input.firstName || user!.firstName,
+			lastName: input.lastName || user!.lastName,
+			password: input.newPassword
+				? await bcrypt.hash(input.newPassword, 10)
+				: user!.password,
+			createdAt: user!.createdAt,
+			role: user!.role,
+		}
+
+		await firestore.collection(ECollection.USER).doc(user!.id).update(updateUserData)
+
+		return updateUserData
+	}),
+
 	login: async (_, { input }: LoginInput) => {
 		const userRes = await firestore
 			.collection(ECollection.USER)
@@ -136,11 +167,11 @@ export const User: IResolverType<IUser> = {
 	createdAt: (parent) => {
 		return (parent.createdAt as any).toDate()
 	},
-	historyResults: async (parent) => {
+	historyResults: async (parent, { sortInput }: { sortInput: SortInput }) => {
 		const res = await firestore
 			.collection(ECollection.HISTORY_RESULT)
 			.where("userId", "==", parent.id)
-			.orderBy("score", "desc")
+			.orderBy(sortInput.orderBy, sortInput.type)
 			.get()
 		const data = res.docs.map((e) => e.data())
 		return data

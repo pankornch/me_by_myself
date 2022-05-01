@@ -12,7 +12,7 @@ import { MUTATIOB_CREATE_USER, MUTATION_LOGIN } from "../gql"
 import Swal from "sweetalert2"
 import useUser from "../hooks/useUser"
 
-const Context = createContext<{ onCloseModal?: (value: boolean) => void }>({})
+const Context = createContext<{ onCloseModal?: (value: boolean) => void, refetchUser?: () => Promise<void> }>({})
 
 interface Props {
 	responsive?: boolean
@@ -23,7 +23,7 @@ const Navbar: FC<Props> = ({ responsive = true }) => {
 
 	const [showLoginModal, setShowLoginModal] = useState<boolean>(false)
 
-	const [user] = useUser()
+	const [user, refetchUser] = useUser()
 
 	return (
 		<nav className="flex items-center justify-between relative">
@@ -61,9 +61,11 @@ const Navbar: FC<Props> = ({ responsive = true }) => {
 					</Link>
 				</li>
 				{user ? (
-					<button className="hover:text-main-blue-green hover:underline underline-offset-4">
-						บัญชีของฉัน
-					</button>
+					<Link href="/account">
+						<a className="hover:text-main-blue-green hover:underline underline-offset-4">
+							บัญชีของฉัน
+						</a>
+					</Link>
 				) : (
 					<li>
 						<button
@@ -102,11 +104,19 @@ const Navbar: FC<Props> = ({ responsive = true }) => {
 
 							<li>
 								{user ? (
-									<button className="hover:text-main-blue-green hover:underline underline-offset-4">
-										บัญชีของฉัน
-									</button>
+									<Link href="/account">
+										<a className="hover:text-main-blue-green hover:underline underline-offset-4">
+											บัญชีของฉัน
+										</a>
+									</Link>
 								) : (
-									<button className="hover:text-main-blue-green hover:underline underline-offset-4">
+									<button
+										onClick={() => {
+											setShowLoginModal(true)
+											setIsMenuShow(false)
+										}}
+										className="hover:text-main-blue-green hover:underline underline-offset-4"
+									>
 										เข้าสู่ระบบ
 									</button>
 								)}
@@ -115,7 +125,7 @@ const Navbar: FC<Props> = ({ responsive = true }) => {
 					</div>
 				</>
 			)}
-			<Context.Provider value={{ onCloseModal: setShowLoginModal }}>
+			<Context.Provider value={{ onCloseModal: setShowLoginModal, refetchUser }}>
 				<Modal show={showLoginModal} onClose={setShowLoginModal}>
 					<div className="bg-white absolute top-36 left-1/2 z-50 p-8 -translate-x-1/2 flex flex-col gap-y-6 w-[30rem] shadow-lg rounded-3xl">
 						<XCircleIcon
@@ -186,6 +196,7 @@ const Register = () => {
 				timer: 3000,
 			})
 			context.onCloseModal!(false)
+			context.refetchUser!()
 		} catch (error) {
 			if (`this phone number: ${telNumber} has already exists`) {
 				Swal.fire({
@@ -315,6 +326,7 @@ const Login = () => {
 			})
 
 			context.onCloseModal!(false)
+			context.refetchUser!()
 		} catch (error: any) {
 			if (error.message === "Incorrect phone number or password") {
 				Swal.fire({
@@ -379,4 +391,4 @@ const Login = () => {
 	)
 }
 
-export default NoSSR(Navbar)
+export default NoSSR(Navbar) as FC<Props>

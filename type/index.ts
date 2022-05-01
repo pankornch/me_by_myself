@@ -5,6 +5,7 @@ export interface IUser {
 	telNumber: string
 	firstName: string
 	lastName: string
+	fullName?: string
 	password: string
 	role: EUserRole
 	createdAt: Date
@@ -71,5 +72,6 @@ export interface ICriteria {
 		end: number
 	}
 	criteria: string
+	criteriaRange: string
 	title: string
 }

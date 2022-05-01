@@ -12,3 +12,20 @@ export default function getCriteria(
 
 	return null
 }
+
+
+export const getCriteriaColor = (criteria: ICriteria[],score: number) => {
+	let _criteria: any
+	for (const c of criteria) {
+		if (score >= c.range.start && score <= c.range.end) {
+			_criteria = c
+			break
+		}
+	}
+
+	console.log(_criteria)
+
+	if (_criteria.criteriaRange === "สูง") return "#20A2A0"
+	else if (_criteria.criteriaRange === "ปานกลาง") return "#A2E1DB"
+	else return "#EC4C38"
+}
