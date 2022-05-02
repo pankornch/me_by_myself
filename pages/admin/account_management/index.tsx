@@ -5,7 +5,7 @@ import Register from "../../../src/components/Auth/Regiser"
 import Tab from "../../../src/components/Tab"
 import {
 	MUTATION_ADMIN_CREATE_ADMIN_ACCOUNT,
-	MUTATIO_ADMIN_DELETE_ADMIN_ACCOUNT,
+	MUTATION_ADMIN_DELETE_ADMIN_ACCOUNT,
 	QUERY_ADMIN_LIST_ADMIN_ACCOUNTS,
 } from "../../../src/gql"
 import { ChevronUpIcon } from "@heroicons/react/outline"
@@ -159,7 +159,7 @@ interface Props {
 	onSuccess?: () => void
 }
 const AdminDeleteAccountCard: FC<Props> = (props) => {
-	const [deleteAdminAccount] = useMutation(MUTATIO_ADMIN_DELETE_ADMIN_ACCOUNT)
+	const [deleteAdminAccount] = useMutation(MUTATION_ADMIN_DELETE_ADMIN_ACCOUNT)
 
 	const handleDelete = async () => {
 		const res = await Swal.fire({

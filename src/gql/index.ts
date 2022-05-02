@@ -141,8 +141,14 @@ export const MUTATION_ADMIN_CREATE_ADMIN_ACCOUNT = gql`
 	}
 `
 
-export const MUTATIO_ADMIN_DELETE_ADMIN_ACCOUNT = gql`
+export const MUTATION_ADMIN_DELETE_ADMIN_ACCOUNT = gql`
 	mutation adminDeleteAdminAccount($userId: ID!){
 		adminDeleteAdminAccount(userId: $userId)
+	}
+`
+
+export const MUTATION_ADMIN_DELETE_HISTORY_RESULT = gql`
+	mutation adminDeleteHistoryResult($id: ID!) {
+		adminDeleteHistoryResult(id: $id)
 	}
 `

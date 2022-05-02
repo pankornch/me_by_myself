@@ -29,6 +29,8 @@ const AdminIndexPage: NextPage = () => {
 	const [selectedOrderBy, setSelectedOrderBy] = useState<string>("createdAt")
 	const [sortType, setSortType] = useState<string>("DESC")
 
+	const [isShowAnonymous, setIsShowAnonymous] = useState<boolean>(true)
+
 	const toggleSortType = () =>
 		setSortType((prev) => (prev === "ASC" ? "DESC" : "ASC"))
 
@@ -37,10 +39,15 @@ const AdminIndexPage: NextPage = () => {
 		{ text: "คะแนน", value: "score" },
 	]
 
-	const myHistoryResults = useMemo<IHistoryResult[]>(() => {
+	const historyResults = useMemo<IHistoryResult[]>(() => {
 		if (!data) return []
-		return data.adminGetHistoryResults
-	}, [data])
+
+		if (isShowAnonymous) return data.adminGetHistoryResults
+
+		return (data.adminGetHistoryResults as IHistoryResult[]).filter(
+			(e) => e.user
+		)
+	}, [data, isShowAnonymous])
 
 	useEffect(() => {
 		getHistoryResult({
@@ -58,22 +65,36 @@ const AdminIndexPage: NextPage = () => {
 		<div className="px-4 py-12 pt-32 md:px-24 lg:px-48">
 			<NavbarAccount />
 
-			<div className="flex items-center justify-end mb-6 gap-x-3">
-				<p>เรียงข้อมูลตาม</p>
-				<Select
-					className="w-24"
-					options={sortOrderBySelection}
-					value={selectedOrderBy}
-					onChangeValue={setSelectedOrderBy}
-				/>
-				<button onClick={toggleSortType} className="p-3 select-none">
-					<ChevronUpIcon
-						className={combindClass(
-							"w-6 h-6",
-							sortType === "DESC" ? "rotate-180" : "rotate-0"
-						)}
+			<div className="flex flex-col lg:flex-row items-start sm:items-center justify-between mb-6 gap-y-3 border-b-2 pb-3">
+				<div className="flex items-center gap-x-2">
+					<input
+						id="show-anonymous"
+						type="checkbox"
+						checked={isShowAnonymous}
+						onChange={(e) => setIsShowAnonymous(e.target.checked)}
 					/>
-				</button>
+					<label htmlFor="show-anonymous">ผู้ใช้ไม่ประสงค์ลงชื่อเข้าใช้</label>
+				</div>
+
+				<p>ผลการประเมินทั้งหมด ({loading ? "..." : historyResults.length})</p>
+
+				<div className="flex items-center gap-x-3">
+					<p>เรียงข้อมูลตาม</p>
+					<Select
+						className="w-24"
+						options={sortOrderBySelection}
+						value={selectedOrderBy}
+						onChangeValue={setSelectedOrderBy}
+					/>
+					<button onClick={toggleSortType} className="p-3 select-none">
+						<ChevronUpIcon
+							className={combindClass(
+								"w-6 h-6",
+								sortType === "DESC" ? "rotate-180" : "rotate-0"
+							)}
+						/>
+					</button>
+				</div>
 			</div>
 
 			{loading ? (
@@ -82,7 +103,7 @@ const AdminIndexPage: NextPage = () => {
 				</h4>
 			) : (
 				<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-					{myHistoryResults.map((result) => (
+					{historyResults.map((result) => (
 						<ResultCard key={result.id} showUserInfo isAdmin result={result} />
 					))}
 				</div>
