@@ -92,8 +92,7 @@ const AdminResultByIdPage: NextPage = () => {
 
 	return (
 		<Layout navbarType="ACCOUNT">
-			<div className="pt-24 flex flex-col gap-y-12">
-				<NavbarAccount />
+			<div className="pt-28 flex flex-col gap-y-12">
 				<NotFoundLayout
 					isNotFound={!data}
 					notFoundComponent={<ResultNotFound />}
