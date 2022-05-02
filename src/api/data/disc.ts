@@ -30,7 +30,7 @@ export const DISC = [
 			incentives: "ความมั่นคง การยอมรับ",
 			afraid: "ความไม่มั่นคง",
 		},
-        color: "#65a30d"
+        color: "#84cc16"
 	},
 	{
 		image: "/compliance.png",

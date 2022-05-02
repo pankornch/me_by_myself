@@ -1,5 +1,5 @@
 import { VolumeUpIcon } from "@heroicons/react/outline"
-import { FC, useMemo } from "react"
+import { FC } from "react"
 import { useSpeechSynthesis } from "react-speech-kit"
 import NoSSR from "./NoSSR"
 
