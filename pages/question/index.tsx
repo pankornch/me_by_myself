@@ -72,52 +72,50 @@ const QuestionPage: NextPage<Props> = ({ questions }) => {
 
 	return (
 		<Layout navbarType="HOME">
-			<div className="md:px-24 lg:px-48">
-				<div className="bg-main-blue-green w-full p-6 pt-12 text-white rounded-b-[2.65rem] shadow-lg">
-					<h4 className="text-[1.8rem] font-semibold mb-4 text-center">
-						แบบประเมินคุณค่าในตนเอง
-					</h4>
-					<p className="text-xs">
-						การเห็นคุณค่าในตนเอง คือ การที่มองตัวเอง และ ประเมินว่า ตัวเรานั้นมี
-						คุณค่า คสามสารมารถ ความสำคัญ
-						และได้รับความยินยอมรับจากคนรอบข้างเป็นอย่างไร เรามาสำรวจกันดีไหม
-						ว่าเราเป็นบุคคลที่เห็นคุณค่าในตนเองหรือไม่ อย่างไร
-						ลองตอบคำถามเกี่ยวกับความรู้สึกมีคุณค่าในตนเองดู
-						โดยเลือกข้อความที่ตรงกับความรู้สึกตัวเองมากที่สุด
-					</p>
-				</div>
-				<div className="px-4 pb-24">
-					{questions.map((question) => (
-						<Question
-							key={question.id}
-							question={question}
-							onSelected={(value) => {
-								setSelectedChoice({ ...selectedChoice, ...value })
-							}}
-							selectedChoice={selectedChoice}
-						/>
-					))}
-				</div>
-				<div className="fixed bottom-5 left-1/2 -translate-x-1/2 bg-main-blue-green w-56 text-center p-3 rounded-xl text-white font-semibold shadow-xl">
-					{progressCount !== questions.length ? (
-						<span>
-							ท่านทำไปแล้ว {progressCount} / {questions.length} ข้อ
-						</span>
-					) : (
-						<button
-							disabled={submitLoading}
-							className="w-full flex items-center justify-center gap-x-4 hover:scale-105 duration-200 disabled:cursor-wait"
-							onClick={handleSubmit}
-						>
-							ส่งคำตอบ
-							{submitLoading ? (
-								<CloudDownloadIcon className="w-6 h-6 animate-bounce" />
-							) : (
-								<PaperAirplaneIcon className="w-6 h-6 rotate-90" />
-							)}
-						</button>
-					)}
-				</div>
+			<div className="bg-main-blue-green w-full p-6 pt-12 text-white rounded-b-[2.65rem] shadow-lg">
+				<h4 className="text-[1.8rem] font-semibold mb-4 text-center">
+					แบบประเมินคุณค่าในตนเอง
+				</h4>
+				<p className="text-xs">
+					การเห็นคุณค่าในตนเอง คือ การที่มองตัวเอง และ ประเมินว่า ตัวเรานั้นมี
+					คุณค่า คสามสารมารถ ความสำคัญ
+					และได้รับความยินยอมรับจากคนรอบข้างเป็นอย่างไร เรามาสำรวจกันดีไหม
+					ว่าเราเป็นบุคคลที่เห็นคุณค่าในตนเองหรือไม่ อย่างไร
+					ลองตอบคำถามเกี่ยวกับความรู้สึกมีคุณค่าในตนเองดู
+					โดยเลือกข้อความที่ตรงกับความรู้สึกตัวเองมากที่สุด
+				</p>
+			</div>
+			<div className="px-4 pb-24">
+				{questions.map((question) => (
+					<Question
+						key={question.id}
+						question={question}
+						onSelected={(value) => {
+							setSelectedChoice({ ...selectedChoice, ...value })
+						}}
+						selectedChoice={selectedChoice}
+					/>
+				))}
+			</div>
+			<div className="fixed bottom-5 left-1/2 -translate-x-1/2 bg-main-blue-green w-56 text-center p-3 rounded-xl text-white font-semibold shadow-xl">
+				{progressCount !== questions.length ? (
+					<span>
+						ท่านทำไปแล้ว {progressCount} / {questions.length} ข้อ
+					</span>
+				) : (
+					<button
+						disabled={submitLoading}
+						className="w-full flex items-center justify-center gap-x-4 hover:scale-105 duration-200 disabled:cursor-wait"
+						onClick={handleSubmit}
+					>
+						ส่งคำตอบ
+						{submitLoading ? (
+							<CloudDownloadIcon className="w-6 h-6 animate-bounce" />
+						) : (
+							<PaperAirplaneIcon className="w-6 h-6 rotate-90" />
+						)}
+					</button>
+				)}
 			</div>
 		</Layout>
 	)
