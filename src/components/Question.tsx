@@ -1,8 +1,7 @@
 import React, { FC } from "react"
 import { IQuestion } from "../../type"
 import combindClass from "../utils/combindClass"
-import { VolumeUpIcon } from "@heroicons/react/outline"
-import textToSpeech from "../utils/textToSpeech"
+import ButtonToSpeech from "./ButtonToSpeech"
 interface Props {
 	question: IQuestion
 	onSelected?: (value: Record<string, string>) => void
@@ -29,10 +28,7 @@ const Question: FC<Props> = ({
 			)}
 		>
 			<div className="flex items-center justify-center gap-x-2">
-				<VolumeUpIcon
-					className="w-4 h-4 cursor-pointer"
-					onClick={() => textToSpeech(question.title)}
-				/>
+				<ButtonToSpeech text={question.title} />
 				<p className="text-lg font-semibold">{question.title}</p>
 			</div>
 

@@ -36,7 +36,7 @@ const Home: NextPage = () => {
 					</div>
 				</div>
 			</div>
-			<div className="text-center mb-8 font-semibold">
+			<div className="text-center my-8 font-semibold">
 				<h2>4 DISC</h2>
 				<h4>Personal Testing</h4>
 			</div>
