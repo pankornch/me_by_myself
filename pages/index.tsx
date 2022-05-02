@@ -37,7 +37,13 @@ const Home: NextPage = () => {
 				</div>
 			</div>
 			<div className="text-center my-8 font-semibold">
-				<h2>4 DISC</h2>
+				<h1 className="font-semibold">
+					<span>4 </span>
+					<span className="text-orange-500">D</span>
+					<span className="text-yellow-500">I</span>
+					<span className="text-lime-500">S</span>
+					<span className="text-sky-500">C</span>
+				</h1>
 				<h4>Personal Testing</h4>
 			</div>
 
@@ -115,7 +121,7 @@ const Disc: FC<Props> = ({ disc, index }) => {
 				</div>
 			</div>
 
-			<div className="md:order-1">
+			<div className="md:order-1" style={{ color: disc.color }}>
 				<h4 className="font-medium">
 					{index + 1}. {disc.title}
 				</h4>
