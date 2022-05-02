@@ -9,7 +9,7 @@ export default gql`
 		fullName: String!
 		role: String!
 		createdAt: Date!
-		historyAnswers(sortInput: SortInput): [HistoryAnswer]!
+		historyResults(sortInput: SortInput): [HistoryResult]!
 	}
 
 	type Question {
@@ -24,10 +24,11 @@ export default gql`
 		score: Float!
 	}
 
-	type HistoryAnswer {
+	type HistoryResult {
 		id: ID!
 		userId: ID
 		user: User
+		isAnonymous: Boolean!
 		score: Float!
 		criteria: String!
 		createdAt: Date!

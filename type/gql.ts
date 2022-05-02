@@ -14,7 +14,7 @@ export interface CreateUserInput {
 	}
 }
 
-export interface SubmitQuestionInput {
+export interface SubmitAnswerInput {
 	input: { answers: AnswerInput[]; isShare: boolean }
 }
 
@@ -31,4 +31,15 @@ export interface SortInput {
 export enum ESortType {
 	ASC = "asc",
 	DESC = "desc",
+}
+
+
+export interface UpdateUserInput {
+	input: {
+		telNumber: string
+		firstName: string
+		lastName: string
+		password: string
+		newPassword: string
+	}
 }

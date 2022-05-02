@@ -5,7 +5,9 @@ export default gql`
 		me: User!
 		questions: [Question]!
 
-		adminGetHistoryAnswers(sortInput: SortInput): [HistoryAnswer]!
+		adminGetHistoryResults(sortInput: SortInput): [HistoryResult]!
 		adminListAdminAccounts(sortInput: SortInput): [User]!
+
+		getResultById(id: ID!): HistoryResult!
 	}
 `

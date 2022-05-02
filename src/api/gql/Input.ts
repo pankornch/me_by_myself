@@ -13,7 +13,7 @@ export default gql`
 		password: String!
 	}
 
-	input SubmitQuestionInput {
+	input SubmitAnswerInput {
 		answers: [AnswerInput!]!
 	}
 
@@ -30,5 +30,13 @@ export default gql`
 	enum SortType {
 		ASC
 		DESC
+	}
+
+	input UpdateUserInput {
+		telNumber: String
+		firstName: String
+		lastName: String
+		password: String
+		newPassword: String
 	}
 `

@@ -1,7 +1,7 @@
 export enum ECollection {
 	USER = "Users",
 	QUESTION = "Questions",
-	HISTORY_ANSWER = "HistoryAnswers",
+	HISTORY_RESULT = "HistoryResults",
 }
 
 export enum EUserRole {
