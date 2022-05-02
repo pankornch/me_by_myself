@@ -1,17 +1,30 @@
+// @ts-nocheck
 let isPlayed: boolean = false
 
 export default function textToSpeech(text: string) {
 	if (isPlayed) return
 
-	const speech = new SpeechSynthesisUtterance(text)
-	speech.lang = "TH"
-	speech.rate = 0.8
+	const SpeechSynthesisUtterance =
+		window.webkitSpeechSynthesisUtterance ||
+		window.mozSpeechSynthesisUtterance ||
+		window.msSpeechSynthesisUtterance ||
+		window.oSpeechSynthesisUtterance ||
+		window.SpeechSynthesisUtterance
 
-	isPlayed = true
+	if (SpeechSynthesisUtterance !== undefined) {
+		const voice = window.speechSynthesis.getVoices()[16]
+		const speech = new SpeechSynthesisUtterance(text)
+		speech.lang = voice.lang
+		speech.rate = 0.8
 
-	speech.addEventListener("end", () => {
-		isPlayed = false
-	})
+		isPlayed = true
 
-	window.speechSynthesis.speak(speech)
+		speech.addEventListener("end", () => {
+			isPlayed = false
+		})
+
+		window.speechSynthesis.speak(speech)
+	} else {
+		console.warn("sorry not supported 😭")
+	}
 }

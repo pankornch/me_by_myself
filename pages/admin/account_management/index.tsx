@@ -47,9 +47,6 @@ const AdminAccountManagementPage: NextPage = () => {
 										buttonText="เพิ่มบัญชี"
 										loading={loading}
 										onSubmit={handleCreateAccount}
-										onSuccess={() => {
-											console.log("success")
-										}}
 									/>
 								</div>
 							),
