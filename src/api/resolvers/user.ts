@@ -171,7 +171,7 @@ export const User: IResolverType<IUser> = {
 		const res = await firestore
 			.collection(ECollection.HISTORY_RESULT)
 			.where("userId", "==", parent.id)
-			.orderBy(sortInput.orderBy, sortInput.type)
+			.orderBy(sortInput?.orderBy || "createdAt", sortInput?.type || "desc")
 			.get()
 		const data = res.docs.map((e) => e.data())
 		return data

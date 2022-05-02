@@ -7,10 +7,17 @@ interface Props {
 	question: IQuestion
 	onSelected?: (value: Record<string, string>) => void
 	selectedChoice: Record<string, string>
+	disabled?: boolean
 }
 
-const Question: FC<Props> = ({ question, onSelected, selectedChoice }) => {
+const Question: FC<Props> = ({
+	question,
+	onSelected,
+	selectedChoice,
+	disabled,
+}) => {
 	const handleSelectedChoice = (questionId: string, choiceId: string) => {
+		if (disabled) return
 		onSelected?.call(this, { [questionId]: choiceId })
 	}
 
@@ -39,7 +46,12 @@ const Question: FC<Props> = ({ question, onSelected, selectedChoice }) => {
 						{selectedChoice[question.id] === question.choices[0].id ? (
 							<div className="text-4xl">😃</div>
 						) : (
-							<div className="text-4xl group-hover:opacity-75 opacity-0 duration-200 ease-in-out">
+							<div
+								className={combindClass(
+									"text-4xl opacity-0 duration-200 ease-in-out",
+									!disabled && "group-hover:opacity-75"
+								)}
+							>
 								😃
 							</div>
 						)}
@@ -54,7 +66,12 @@ const Question: FC<Props> = ({ question, onSelected, selectedChoice }) => {
 						{selectedChoice[question.id] === question.choices[1].id ? (
 							<div className="text-4xl">🙂</div>
 						) : (
-							<div className="text-4xl group-hover:opacity-75 opacity-0 duration-200 ease-in-out">
+							<div
+								className={combindClass(
+									"text-4xl opacity-0 duration-200 ease-in-out",
+									!disabled && "group-hover:opacity-75"
+								)}
+							>
 								🙂
 							</div>
 						)}
@@ -69,7 +86,12 @@ const Question: FC<Props> = ({ question, onSelected, selectedChoice }) => {
 						{selectedChoice[question.id] === question.choices[2].id ? (
 							<div className="text-4xl">😟</div>
 						) : (
-							<div className="text-4xl group-hover:opacity-75 opacity-0 duration-200 ease-in-out">
+							<div
+								className={combindClass(
+									"text-4xl opacity-0 duration-200 ease-in-out",
+									!disabled && "group-hover:opacity-75"
+								)}
+							>
 								😟
 							</div>
 						)}
@@ -77,6 +99,7 @@ const Question: FC<Props> = ({ question, onSelected, selectedChoice }) => {
 				</div>
 				<div
 					onClick={() =>
+						!disabled &&
 						handleSelectedChoice(question.id, question.choices[3].id)
 					}
 				>
@@ -84,7 +107,12 @@ const Question: FC<Props> = ({ question, onSelected, selectedChoice }) => {
 						{selectedChoice[question.id] === question.choices[3].id ? (
 							<div className="text-4xl">😡</div>
 						) : (
-							<div className="text-4xl group-hover:opacity-75 opacity-0 duration-200 ease-in-out">
+							<div
+								className={combindClass(
+									"text-4xl opacity-0 duration-200 ease-in-out",
+									!disabled && "group-hover:opacity-75"
+								)}
+							>
 								😡
 							</div>
 						)}

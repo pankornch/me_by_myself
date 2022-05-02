@@ -17,11 +17,13 @@ const ResultCard: FC<Props> = (props) => {
 			className="flex flex-col gap-y-4 bg-white shadow-lg border-2 p-4 font-medium rounded-xl"
 			style={{ borderColor: getCriteriaColor(criterias, props.result.score) }}
 		>
-			{props.showUserInfo && userInfo && (
+			{props.showUserInfo && userInfo ? (
 				<div className="flex justify-between">
 					<span>{userInfo.fullName}</span>
 					<span>{phoneNumberFormat(userInfo.telNumber)}</span>
 				</div>
+			) : (
+				<p className="text-gray-400">ผู้ใช้ไม่ประสงค์ลงชื่อเข้าใช้</p>
 			)}
 
 			<div className="flex justify-between">
@@ -35,7 +37,7 @@ const ResultCard: FC<Props> = (props) => {
 
 			<div className="flex justify-between items-center">
 				<p className="text-sm">{dateFormat(props.result.createdAt)} น.</p>
-				<Link href={`/result/${props.result.id}`}>
+				<Link href={props.isAdmin ?`/admin/result/${props.result.id}` :`/result/${props.result.id}`}>
 					<a className="bg-main-blue-green text-white px-4 py-1 rounded-full hover:scale-110">
 						ดูข้อมูล
 					</a>

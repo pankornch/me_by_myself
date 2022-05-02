@@ -1,4 +1,5 @@
 import { ICriteria } from "../../type"
+import { tailwindColors } from "../utils/helpers"
 
 export default function getCriteria(
 	criteria: ICriteria[],
@@ -13,8 +14,10 @@ export default function getCriteria(
 	return null
 }
 
-
-export const getCriteriaColor = (criteria: ICriteria[],score: number) => {
+export const getCriteriaColor = (
+	criteria: ICriteria[],
+	score: number
+): string => {
 	let _criteria: any
 	for (const c of criteria) {
 		if (score >= c.range.start && score <= c.range.end) {
@@ -22,10 +25,10 @@ export const getCriteriaColor = (criteria: ICriteria[],score: number) => {
 			break
 		}
 	}
-
-	console.log(_criteria)
-
-	if (_criteria.criteriaRange === "สูง") return "#20A2A0"
-	else if (_criteria.criteriaRange === "ปานกลาง") return "#A2E1DB"
-	else return "#EC4C38"
+	if (!_criteria) return tailwindColors.main["red"]
+	if (_criteria.criteriaRange === "สูง")
+		return tailwindColors.main["blue-green"]
+	else if (_criteria.criteriaRange === "ปานกลาง")
+		return tailwindColors.main["green-light"]
+	else return tailwindColors.main["red"]
 }

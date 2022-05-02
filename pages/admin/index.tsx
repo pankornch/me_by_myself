@@ -4,18 +4,17 @@ import React, { useEffect, useMemo, useState } from "react"
 import NoSSR from "../../src/components/NoSSR"
 import ResultCard from "../../src/components/ResultCard"
 import Select from "../../src/components/Select"
-import { QUERY_GET_MY_HISTORY_RESULTS } from "../../src/gql"
+import { QUERY_ADMIN_GET_HISTORY_RESULTS } from "../../src/gql"
 import { IHistoryResult } from "../../type"
 import { ChevronUpIcon } from "@heroicons/react/outline"
 import combindClass from "../../src/utils/combindClass"
 import NavbarAccount from "../../src/components/NavbarAccount"
 import WithAuth from "../../src/components/Auth/WithAuth"
 import { EUserRole } from "../../type/enum"
-import Layout from "../../src/components/Layouts"
 
-const AccountPage: NextPage = () => {
-	const [getMyHistoryResult, { data, loading }] = useLazyQuery(
-		QUERY_GET_MY_HISTORY_RESULTS,
+const AdminIndexPage: NextPage = () => {
+	const [getHistoryResult, { data, loading }] = useLazyQuery(
+		QUERY_ADMIN_GET_HISTORY_RESULTS,
 		{
 			fetchPolicy: "network-only",
 			variables: {
@@ -40,11 +39,11 @@ const AccountPage: NextPage = () => {
 
 	const myHistoryResults = useMemo<IHistoryResult[]>(() => {
 		if (!data) return []
-		return data.me.historyResults
+		return data.adminGetHistoryResults
 	}, [data])
 
 	useEffect(() => {
-		getMyHistoryResult({
+		getHistoryResult({
 			variables: {
 				sortInput: {
 					orderBy: selectedOrderBy,
@@ -56,45 +55,42 @@ const AccountPage: NextPage = () => {
 	}, [selectedOrderBy, sortType])
 
 	return (
-		<Layout navbarType="ACCOUNT">
-			<div className="pt-32">
-				<div className="flex items-center justify-end mb-6 gap-x-3">
-					<p>เรียงข้อมูลตาม</p>
-					<Select
-						className="w-24"
-						options={sortOrderBySelection}
-						value={selectedOrderBy}
-						onChangeValue={setSelectedOrderBy}
+		<div className="px-4 py-12 pt-32 md:px-24 lg:px-48">
+			<NavbarAccount />
+
+			<div className="flex items-center justify-end mb-6 gap-x-3">
+				<p>เรียงข้อมูลตาม</p>
+				<Select
+					className="w-24"
+					options={sortOrderBySelection}
+					value={selectedOrderBy}
+					onChangeValue={setSelectedOrderBy}
+				/>
+				<button onClick={toggleSortType} className="p-3 select-none">
+					<ChevronUpIcon
+						className={combindClass(
+							"w-6 h-6",
+							sortType === "DESC" ? "rotate-180" : "rotate-0"
+						)}
 					/>
-					<button onClick={toggleSortType} className="p-3 select-none">
-						<ChevronUpIcon
-							className={combindClass(
-								"w-6 h-6",
-								sortType === "DESC" ? "rotate-180" : "rotate-0"
-							)}
-						/>
-					</button>
-				</div>
-				{loading ? (
-					<h4 className="font-medium text-center text-main-blue-green animate-bounce mt-3">
-						กำลังโหลดข้อมูล ...
-					</h4>
-				) : (
-					<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-						{myHistoryResults.map((result) => (
-							<ResultCard key={result.id} showUserInfo result={result} />
-						))}
-					</div>
-				)}
+				</button>
 			</div>
-		</Layout>
+
+			{loading ? (
+				<h4 className="font-medium text-center text-main-blue-green animate-bounce mt-3">
+					กำลังโหลดข้อมูล ...
+				</h4>
+			) : (
+				<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+					{myHistoryResults.map((result) => (
+						<ResultCard key={result.id} showUserInfo isAdmin result={result} />
+					))}
+				</div>
+			)}
+		</div>
 	)
 }
 
 export default NoSSR(
-	WithAuth(AccountPage, [
-		EUserRole.USER,
-		EUserRole.ADMIN,
-		EUserRole.SUPER_ADMIN,
-	])
+	WithAuth(AdminIndexPage, [EUserRole.ADMIN, EUserRole.SUPER_ADMIN])
 )

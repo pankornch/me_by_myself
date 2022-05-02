@@ -45,3 +45,7 @@ h5 {
 h6 {
   @apply text-lg;
 }
+
+.container {
+  @apply px-4 md:px-24 lg:px-48 pb-6 md:pb-12;
+}

@@ -1,3 +1,5 @@
+import tailwindConfig from "../../tailwind.config"
+
 export const dateFormat = (date: Date | string | number) => {
 	const dateFormat = new Intl.DateTimeFormat("th", {
 		dateStyle: "medium",
@@ -18,5 +20,11 @@ export const phoneNumberFormat = (phoneNumber: string) => {
 		if (insertAt.includes(i)) format += "-"
 	}
 
-    return format
+	return format
+}
+
+export const tailwindColors = tailwindConfig.theme.extend.colors
+
+export const copyToClipboard = (value: string) => {
+	navigator.clipboard.writeText(value)
 }

@@ -8,7 +8,8 @@ import { PaperAirplaneIcon, CloudDownloadIcon } from "@heroicons/react/outline"
 import client from "../../src/configs/apolloClient"
 import Swal from "sweetalert2"
 import { useRouter } from "next/router"
-import Navbar from "../../src/components/Navbar"
+import { tailwindColors } from "../../src/utils/helpers"
+import Layout from "../../src/components/Layouts"
 
 interface Props {
 	questions: IQuestion[]
@@ -32,8 +33,18 @@ const QuestionPage: NextPage<Props> = ({ questions }) => {
 	const isSubmitRef = useRef<boolean>(false)
 
 	const handleSubmit = async () => {
-		if (isSubmitRef.current) return
+		const { isConfirmed } = await Swal.fire({
+			title: "ต้องการส่งแบบประเมิน ?",
+			showCancelButton: true,
+			confirmButtonText: "ส่ง",
+			confirmButtonColor: tailwindColors.main["blue-green"],
+			cancelButtonText: "ยกเลิก",
+		})
+
+		if (isSubmitRef.current || !isConfirmed) return
+
 		isSubmitRef.current = false
+
 		const submitData = {
 			answers: Object.entries(selectedChoice).map(([k, v]) => ({
 				questionId: k,
@@ -60,10 +71,7 @@ const QuestionPage: NextPage<Props> = ({ questions }) => {
 	}
 
 	return (
-		<>
-			<div className="px-4 py-6 md:px-24 lg:px-48">
-				<Navbar />
-			</div>
+		<Layout navbarType="HOME">
 			<div className="md:px-24 lg:px-48">
 				<div className="bg-main-blue-green w-full p-6 pt-12 text-white rounded-b-[2.65rem] shadow-lg">
 					<h4 className="text-[1.8rem] font-semibold mb-4 text-center">
@@ -111,7 +119,7 @@ const QuestionPage: NextPage<Props> = ({ questions }) => {
 					)}
 				</div>
 			</div>
-		</>
+		</Layout>
 	)
 }
 

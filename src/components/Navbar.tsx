@@ -1,6 +1,6 @@
 import { MenuIcon } from "@heroicons/react/solid"
 import Link from "next/link"
-import { createContext, FC, useContext, useMemo, useRef, useState } from "react"
+import { createContext, FC, useContext, useRef, useState } from "react"
 import Input from "../components/Input"
 import combindClass from "../utils/combindClass"
 import Modal from "./Modal"
@@ -11,8 +11,14 @@ import { useMutation } from "@apollo/client"
 import { MUTATIOB_CREATE_USER, MUTATION_LOGIN } from "../gql"
 import Swal from "sweetalert2"
 import useUser from "../hooks/useUser"
+import RegisterComponent from "./Auth/Regiser"
+import { IUser } from "../../type"
+import { tailwindColors } from "../utils/helpers"
 
-const Context = createContext<{ onCloseModal?: (value: boolean) => void, refetchUser?: () => Promise<void> }>({})
+const Context = createContext<{
+	onCloseModal?: (value: boolean) => void
+	refetchUser?: () => Promise<void>
+}>({})
 
 interface Props {
 	responsive?: boolean
@@ -23,7 +29,7 @@ const Navbar: FC<Props> = ({ responsive = true }) => {
 
 	const [showLoginModal, setShowLoginModal] = useState<boolean>(false)
 
-	const [user, refetchUser] = useUser()
+	const [user, { refetch: refetchUser }] = useUser()
 
 	return (
 		<nav className="flex items-center justify-between relative">
@@ -61,7 +67,7 @@ const Navbar: FC<Props> = ({ responsive = true }) => {
 					</Link>
 				</li>
 				{user ? (
-					<Link href="/account">
+					<Link href={user.role === "USER" ? "/account" : "/admin"}>
 						<a className="hover:text-main-blue-green hover:underline underline-offset-4">
 							บัญชีของฉัน
 						</a>
@@ -85,7 +91,7 @@ const Navbar: FC<Props> = ({ responsive = true }) => {
 						className="w-screen h-screen bg-black opacity-25 fixed top-0 left-0 z-40"
 					/>
 
-					<div className="absolute top-10 left-0 bg-white w-[100%] shadow-2xl rounded-3xl p-4 border-main-grey border-2 z-50">
+					<div className="absolute top-10 left-0 md:left-1/2 bg-white w-[100%] md:w-64 shadow-2xl rounded-3xl p-4 border-main-grey border-2 z-50">
 						<ul className="flex flex-col items-center text-lg gap-y-3">
 							<li>
 								<Link href="/">
@@ -104,7 +110,7 @@ const Navbar: FC<Props> = ({ responsive = true }) => {
 
 							<li>
 								{user ? (
-									<Link href="/account">
+									<Link href={user.role === "USER" ? "/account" : "/admin"}>
 										<a className="hover:text-main-blue-green hover:underline underline-offset-4">
 											บัญชีของฉัน
 										</a>
@@ -125,9 +131,11 @@ const Navbar: FC<Props> = ({ responsive = true }) => {
 					</div>
 				</>
 			)}
-			<Context.Provider value={{ onCloseModal: setShowLoginModal, refetchUser }}>
+			<Context.Provider
+				value={{ onCloseModal: setShowLoginModal, refetchUser }}
+			>
 				<Modal show={showLoginModal} onClose={setShowLoginModal}>
-					<div className="bg-white absolute top-36 left-1/2 z-50 p-8 -translate-x-1/2 flex flex-col gap-y-6 w-[30rem] shadow-lg rounded-3xl">
+					<div className="bg-white absolute top-36 left-1/2 z-50 p-8 -translate-x-1/2 flex flex-col gap-y-6 w-[90vw] md:w-[30rem] shadow-lg rounded-3xl">
 						<XCircleIcon
 							className="w-6 h-6 absolute top-4 right-4 cursor-pointer text-main-red"
 							onClick={() => setShowLoginModal(false)}
@@ -136,11 +144,11 @@ const Navbar: FC<Props> = ({ responsive = true }) => {
 							tabs={[
 								{
 									label: "สมัครสมาชิก",
-									chidren: <Register />,
+									children: <Register />,
 								},
 								{
 									label: "เข้าสู่ระบบ",
-									chidren: <Login />,
+									children: <Login />,
 								},
 							]}
 						/>
@@ -151,140 +159,31 @@ const Navbar: FC<Props> = ({ responsive = true }) => {
 	)
 }
 
-const Register = () => {
-	const [telNumber, setTelNumber] = useState<string>("")
-	const [firstName, setFirstName] = useState<string>("")
-	const [lastName, setLastName] = useState<string>("")
-	const [password, setPassword] = useState<string>("")
-	const [confirmPassword, setConfirmPassword] = useState<string>("")
-
-	const submitLoadingRef = useRef<boolean>(false)
+export const Register = () => {
 	const [createUser, { loading }] = useMutation(MUTATIOB_CREATE_USER)
-
-	const [validateError, setValidateError] = useState<Record<string, any>>({})
 
 	const context = useContext(Context)
 
-	const validatePassword = useMemo(() => {
-		if (password !== confirmPassword) return "กรุณากรอกรหัสให้ตรงกัน"
-	}, [password, confirmPassword])
+	const handleSubmit = async (user: Partial<IUser>) => {
+		return createUser({
+			variables: {
+				input: user,
+			},
+		})
+	}
 
-	const handleSubmit = async () => {
-		if (
-			Object.values(validateError).filter(Boolean).length ||
-			submitLoadingRef.current ||
-			validatePassword
-		)
-			return ""
-		submitLoadingRef.current = true
-		try {
-			const res = await createUser({
-				variables: {
-					input: {
-						telNumber,
-						firstName,
-						lastName,
-						password,
-					},
-				},
-			})
-
-			localStorage.setItem("access_token", res.data.createUser.token)
-			Swal.fire({
-				title: "สมัครสมาชิกสำเร็จ",
-				icon: "success",
-				timer: 3000,
-			})
-			context.onCloseModal!(false)
-			context.refetchUser!()
-		} catch (error) {
-			if (`this phone number: ${telNumber} has already exists`) {
-				Swal.fire({
-					title: "สมัครสมาชิกไม่สำเร็จ",
-					text: "เบอร์โทรนี้เคยใช้สมัครสมาชิกแล้ว",
-					icon: "error",
-					timer: 3000,
-				})
-			} else {
-				console.error(error)
-			}
-		}
-		submitLoadingRef.current = false
+	const onSuccess = (res: any) => {
+		context.onCloseModal!(false)
+		localStorage.setItem("access_token", res.data.createUser.token)
+		context.refetchUser!()
 	}
 
 	return (
-		<>
-			<div className="flex flex-col gap-y-2">
-				<Input
-					label="เบอร์โทร"
-					value={telNumber}
-					onChangeValue={(value) => {
-						if (!/^\d+$/.test(value) && value) return
-						setTelNumber(value)
-					}}
-					validate={(value) => {
-						if (value.length !== 10) return "กรุณากรอกข้อมูลเบอร์โทรให้ถูกต้อง"
-					}}
-					onValidateError={(value) =>
-						setValidateError((prev) => ({ ...prev, telNumber: value }))
-					}
-					required
-				/>
-				<div className="grid grid-cols-2 gap-x-4">
-					<Input
-						label="ชื่อ"
-						value={firstName}
-						onChangeValue={setFirstName}
-						validate={(value) => !value && "กรุณากรอกชื่อ"}
-						onValidateError={(value) =>
-							setValidateError((prev) => ({ ...prev, firstName: value }))
-						}
-						required
-					/>
-					<Input
-						label="นามสกุล"
-						value={lastName}
-						onChangeValue={setLastName}
-						validate={(value) => !value && "กรุณากรอกชื่อนามสกุล"}
-						required
-						onValidateError={(value) =>
-							setValidateError((prev) => ({ ...prev, lastName: value }))
-						}
-					/>
-				</div>
-				<Input
-					label="รหัสผ่าน"
-					value={password}
-					onChangeValue={setPassword}
-					type="password"
-					required
-					onValidateError={(value) =>
-						setValidateError((prev) => ({ ...prev, password: value }))
-					}
-				/>
-				<Input
-					label="ยืนยันรหัสผ่าน"
-					value={confirmPassword}
-					onChangeValue={setConfirmPassword}
-					type="password"
-					required
-					onValidateError={(value) =>
-						setValidateError((prev) => ({ ...prev, confirmPassword: value }))
-					}
-				/>
-			</div>
-			{validatePassword && (
-				<div className="text-main-red text-xs mt-2">{validatePassword}</div>
-			)}
-			<button
-				onClick={handleSubmit}
-				disabled={loading}
-				className="flex justify-center items-center py-2 rounded-full bg-main-blue-green w-full text-center text-white font-medium mt-6 hover:scale-105"
-			>
-				สมัครสมาชิก{" "}
-				{loading && <CloudUploadIcon className="w-5 h-5 animate-bounce ml-2" />}
-			</button>
-		</>
+		<RegisterComponent
+			onSubmit={handleSubmit}
+			loading={loading}
+			onSuccess={onSuccess}
+		/>
 	)
 }
 
@@ -323,6 +222,7 @@ const Login = () => {
 				title: "เข้าสู่ระบบสำเร็จ",
 				icon: "success",
 				timer: 3000,
+				confirmButtonColor: tailwindColors.main["blue-green"],
 			})
 
 			context.onCloseModal!(false)

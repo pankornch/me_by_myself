@@ -57,7 +57,7 @@ const Home: NextPage = () => {
 					Build your self-esteem by yourself.
 				</h3>
 
-				<p className="font-light">
+				<p className="font-light text-xl">
 					อย่าสูญเสียตัวตนเพราะคำพูดและการกระทำของใครบางคน ที่เขาบอกมา
 					แล้วไม่ใช่ <span className="text-main-blue-green">“ตัวเรา”</span>{" "}
 					คุณทุกคนมี<span className="text-main-blue-green">คุณค่าในตนเอง</span>
@@ -66,7 +66,7 @@ const Home: NextPage = () => {
 					ในการดำเนินชีวิตต่อไป
 				</p>
 
-				<div className="flex justify-center hover:scale-110 ease-in-out duration-200">
+				<div className="flex justify-center hover:scale-110 ease-in-out duration-200 text-xl">
 					<Link href="/question">
 						<a className="flex items-center bg-main-blue-green w-fit px-6 py-2 text-white rounded-full font-medium">
 							เริ่มทำแบบประเมินได้เลย
@@ -76,12 +76,12 @@ const Home: NextPage = () => {
 				</div>
 			</div>
 			<div className="text-center mt-16 mb-8 font-semibold">
-				<h3>4 DISC</h3>
-				<h5>Personal Testing</h5>
+				<h2>4 DISC</h2>
+				<h4>Personal Testing</h4>
 			</div>
 
-			<h6 className="font-semibold mb-2">DISC คืออะไร ?</h6>
-			<p className="indent-8">
+			<h4 className="font-semibold mb-2">DISC คืออะไร ?</h4>
+			<p className="indent-8 text-xl">
 				DISC เป็นหนึ่งในศาสตร์ทางด้านจิตวิทยา ด้านบุคลิกภาพ (Personality
 				Psychology) ที่ใช้วัดพฤติกรรมมนุษย์ 4 ประเภท
 			</p>
@@ -102,10 +102,10 @@ const Home: NextPage = () => {
 						</div>
 
 						<div className="md:order-1">
-							<h5 className="font-medium">
+							<h4 className="font-medium">
 								{index + 1}. {disc.title}
-							</h5>
-							<ul className="list-disc list-inside">
+							</h4>
+							<ul className="list-disc list-inside text-xl">
 								<li>ให้ความสำคัญกับ: {disc.behavior.focusOn}</li>
 								<li>วิธีการสื่อสาร: {disc.behavior.communication}</li>
 								<li>สิ่งจูงใจ: {disc.behavior.incentives}</li>

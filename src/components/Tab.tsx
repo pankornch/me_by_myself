@@ -8,7 +8,7 @@ interface Props {
 
 interface ITab {
 	label: string
-	chidren: JSX.Element | JSX.Element[]
+	children: JSX.Element | JSX.Element[]
 }
 
 const Tab: FC<Props> = (props) => {
@@ -16,7 +16,7 @@ const Tab: FC<Props> = (props) => {
 
 	const tabLabels = useMemo(() => {
 		return (
-			<div className="flex justify-center text-lg font-medium cursor-pointer divide-x-2 divide-black">
+			<div className="flex justify-center text-lg font-medium cursor-pointer divide-x-2 divide-gray-300 mb-3">
 				{props.tabs.map((tab, index) => (
 					<div
 						onClick={() => setCurrentTabIndex(index)}
@@ -37,7 +37,7 @@ const Tab: FC<Props> = (props) => {
 	return (
 		<>
 			{tabLabels}
-			<div>{props.tabs[currentTabIndex]?.chidren}</div>
+			<div>{props.tabs[currentTabIndex]?.children}</div>
 		</>
 	)
 }

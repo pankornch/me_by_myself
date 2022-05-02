@@ -19,7 +19,7 @@ export const Query: IResolverType = {
 		async (_, { sortInput }: { sortInput: SortInput }) => {
 			const res = await firestore
 				.collection(ECollection.HISTORY_RESULT)
-				.orderBy(sortInput.orderBy || "createdAt", sortInput.type || "desc")
+				.orderBy(sortInput?.orderBy || "createdAt", sortInput?.type || "desc")
 				.get()
 			return res.docs.map((e) => e.data())
 		},

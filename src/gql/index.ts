@@ -18,9 +18,34 @@ export const QUERY_GET_RESULT_BY_ID = gql`
 		getResultById(id: $id) {
 			id
 			score
-			isAnonymous
 			userId
 			criteria
+			
+		}
+	}
+`
+
+export const QUERY_ADMIN_GET_RESULT_BY_ID = gql`
+	query getResultById($id: ID!) {
+		getResultById(id: $id) {
+			score
+			userId
+			user {
+				telNumber
+				fullName
+			}
+			criteria
+			answers {
+				question {
+					title
+					id
+					choices {
+						id
+						title
+					}
+				}
+				choiceId
+			}
 		}
 	}
 `
@@ -38,6 +63,32 @@ export const QUERY_GET_MY_HISTORY_RESULTS = gql`
 					telNumber
 				}
 			}
+		}
+	}
+`
+
+export const QUERY_ADMIN_GET_HISTORY_RESULTS = gql`
+	query adminGetHistoryResults($sortInput: SortInput) {
+		adminGetHistoryResults(sortInput: $sortInput) {
+			id
+			score
+			createdAt
+			criteria
+			user {
+				fullName
+				telNumber
+			}
+		}
+	}
+`
+
+export const QUERY_ADMIN_LIST_ADMIN_ACCOUNTS = gql`
+	query adminListAdminAccounts($sortInput: SortInput) {
+		adminListAdminAccounts(sortInput: $sortInput) {
+			id
+			telNumber
+			fullName
+			role
 		}
 	}
 `
@@ -79,5 +130,19 @@ export const MUTATION_UPDATE_USER = gql`
 		updateUser(input: $input) {
 			id
 		}
+	}
+`
+
+export const MUTATION_ADMIN_CREATE_ADMIN_ACCOUNT = gql`
+	mutation adminCreateAdminAccount($input: CreateUserInput!) {
+		adminCreateAdminAccount(input: $input) {
+			id
+		}
+	}
+`
+
+export const MUTATIO_ADMIN_DELETE_ADMIN_ACCOUNT = gql`
+	mutation adminDeleteAdminAccount($userId: ID!){
+		adminDeleteAdminAccount(userId: $userId)
 	}
 `

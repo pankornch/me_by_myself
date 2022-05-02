@@ -13,6 +13,8 @@ interface Props {
 	type?: React.HTMLInputTypeAttribute
 	validate?: (value: string) => any
 	onValidateError?: (error: string | undefined) => void
+	readOnly?: boolean
+	disabled?: boolean
 }
 const Input: FC<Props> = (props) => {
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,7 +25,7 @@ const Input: FC<Props> = (props) => {
 				setValidateError(hasError)
 			} else {
 				setValidateError("")
-                props.onValidateError?.call(this, undefined)
+				props.onValidateError?.call(this, undefined)
 			}
 		}
 		props.onChange?.call(this, e)
@@ -46,7 +48,7 @@ const Input: FC<Props> = (props) => {
 					>
 						{props.label}
 					</span>
-                    <span className="text-xs text-main-red">{validateError}</span>
+					<span className="text-xs text-main-red">{validateError}</span>
 				</>
 			)}
 			<input
@@ -57,6 +59,8 @@ const Input: FC<Props> = (props) => {
 				placeholder={props.placeholder}
 				type={props.type}
 				required={props.required}
+				readOnly={props.readOnly}
+				disabled={props.disabled}
 			/>
 		</div>
 	)
