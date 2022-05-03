@@ -34,21 +34,6 @@ const ResultSection: FC<Props> = (props) => {
 				</ButtonToSpeech>
 			</div>
 
-			<div className="flex justify-center gap-x-6 font-semibold">
-				<div className="flex flex-col items-center">
-					<div className="w-16 h-16 rounded-full bg-main-red mb-2" />
-					<div>ต่ำ</div>
-				</div>
-				<div className="flex flex-col items-center">
-					<div className="w-16 h-16 rounded-full bg-main-green-light mb-2" />
-					<div>ปานกลาง</div>
-				</div>
-				<div className="flex flex-col items-center">
-					<div className="w-16 h-16 rounded-full bg-main-blue-green mb-2" />
-					<div>สูง</div>
-				</div>
-			</div>
-
 			<div className="flex flex-col items-center gap-y-6">
 				<h6 className="font-semibold">ผลการประเมิน</h6>
 				<ButtonToSpeech text={props.result.criteria}>
