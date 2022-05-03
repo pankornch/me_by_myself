@@ -2,7 +2,7 @@ import Link from "next/link"
 import React, { FC } from "react"
 import { IHistoryResult } from "../../type"
 import { criterias } from "../api/data/question"
-import { getCriteriaColor } from "../utils/getCriteria"
+import getCriteria, { getCriteriaColor } from "../utils/getCriteria"
 import { dateFormat, phoneNumberFormat } from "../utils/helpers"
 
 interface Props {
@@ -14,7 +14,7 @@ const ResultCard: FC<Props> = (props) => {
 	const userInfo = props.result.user && props.result.user
 	return (
 		<div
-			className="flex flex-col gap-y-4 bg-white shadow-lg border-2 p-4 font-medium rounded-xl"
+			className="flex flex-col gap-y-4 bg-white shadow-lg hover:shadow-xl border-2 p-4 font-medium rounded-xl"
 			style={{ borderColor: getCriteriaColor(criterias, props.result.score) }}
 		>
 			{props.showUserInfo && userInfo ? (
@@ -31,13 +31,19 @@ const ResultCard: FC<Props> = (props) => {
 					คะแนนที่ได้ <span>{props.result.score}</span>
 				</p>
 				<p>
-					เกณฑ์ <span>ปานกลาง</span>
+					เกณฑ์ <span>{getCriteria(criterias, props.result.score || 0)?.criteriaRange}</span>
 				</p>
 			</div>
 
 			<div className="flex justify-between items-center">
 				<p className="text-sm">{dateFormat(props.result.createdAt)} น.</p>
-				<Link href={props.isAdmin ?`/admin/result/${props.result.id}` :`/result/${props.result.id}`}>
+				<Link
+					href={
+						props.isAdmin
+							? `/admin/result/${props.result.id}`
+							: `/result/${props.result.id}`
+					}
+				>
 					<a className="bg-main-blue-green text-white px-4 py-1 rounded-full hover:scale-110">
 						ดูข้อมูล
 					</a>
