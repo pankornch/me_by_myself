@@ -20,6 +20,13 @@ const Question: FC<Props> = ({
 		onSelected?.call(this, { [questionId]: choiceId })
 	}
 
+	const choiceStyles = [
+		{ color: "bg-main-blue-green", emoji: "😃" },
+		{ color: "bg-main-green-light", emoji: "🙂" },
+		{ color: "bg-main-red-light", emoji: "😟" },
+		{ color: "bg-main-red", emoji: "😡" },
+	]
+
 	return (
 		<div
 			className={combindClass(
@@ -33,91 +40,39 @@ const Question: FC<Props> = ({
 			</div>
 
 			<div className="flex justify-between items-center mt-4">
-				<div
-					onClick={() =>
-						handleSelectedChoice(question.id, question.choices[0].id)
-					}
-				>
-					<div className="w-16 h-16 rounded-full bg-main-blue-green flex items-center justify-center group cursor-pointer">
-						{selectedChoice[question.id] === question.choices[0].id ? (
-							<div className="text-4xl">😃</div>
-						) : (
-							<div
-								className={combindClass(
-									"text-4xl opacity-0 duration-200 ease-in-out",
-									!disabled && "group-hover:opacity-75"
-								)}
-							>
-								😃
-							</div>
-						)}
+				{question.choices.map((choice, index) => (
+					<div
+						key={index}
+						onClick={() =>
+							!disabled &&
+							handleSelectedChoice(question.id, question.choices[index].id)
+						}
+						className="flex flex-col items-center gap-y-3"
+					>
+						<div
+							className={combindClass(
+								"w-16 h-16 rounded-full flex items-center justify-center group cursor-pointer",
+								choiceStyles[index].color
+							)}
+						>
+							{selectedChoice[question.id] === question.choices[index].id ? (
+								<div className="text-4xl">{choiceStyles[index].emoji}</div>
+							) : (
+								<div
+									className={combindClass(
+										"text-4xl opacity-0 duration-200 ease-in-out",
+										!disabled && "group-hover:opacity-75"
+									)}
+								>
+									{choiceStyles[index].emoji}
+								</div>
+							)}
+						</div>
+						<p className="text-[10px] sm:text-sm md:text-base">
+							{choice.title}
+						</p>
 					</div>
-				</div>
-				<div
-					onClick={() =>
-						handleSelectedChoice(question.id, question.choices[1].id)
-					}
-				>
-					<div className="w-12 h-12 rounded-full bg-main-green-light flex items-center justify-center group cursor-pointer">
-						{selectedChoice[question.id] === question.choices[1].id ? (
-							<div className="text-4xl">🙂</div>
-						) : (
-							<div
-								className={combindClass(
-									"text-4xl opacity-0 duration-200 ease-in-out",
-									!disabled && "group-hover:opacity-75"
-								)}
-							>
-								🙂
-							</div>
-						)}
-					</div>
-				</div>
-				<div
-					onClick={() =>
-						handleSelectedChoice(question.id, question.choices[2].id)
-					}
-				>
-					<div className="w-12 h-12 rounded-full bg-main-red-light flex items-center justify-center group cursor-pointer">
-						{selectedChoice[question.id] === question.choices[2].id ? (
-							<div className="text-4xl">😟</div>
-						) : (
-							<div
-								className={combindClass(
-									"text-4xl opacity-0 duration-200 ease-in-out",
-									!disabled && "group-hover:opacity-75"
-								)}
-							>
-								😟
-							</div>
-						)}
-					</div>
-				</div>
-				<div
-					onClick={() =>
-						!disabled &&
-						handleSelectedChoice(question.id, question.choices[3].id)
-					}
-				>
-					<div className="w-16 h-16 rounded-full bg-main-red flex items-center justify-center group cursor-pointer">
-						{selectedChoice[question.id] === question.choices[3].id ? (
-							<div className="text-4xl">😡</div>
-						) : (
-							<div
-								className={combindClass(
-									"text-4xl opacity-0 duration-200 ease-in-out",
-									!disabled && "group-hover:opacity-75"
-								)}
-							>
-								😡
-							</div>
-						)}
-					</div>
-				</div>
-			</div>
-			<div className="flex justify-between mt-2">
-				<span className="text-main-blue-green">เห็นด้วยอย่างยิ่ง</span>
-				<span className="text-main-red">ไม่เห็นด้วยอย่างยิ่ง</span>
+				))}
 			</div>
 		</div>
 	)
